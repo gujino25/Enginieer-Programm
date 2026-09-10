@@ -17,7 +17,7 @@ func NewProjectStore() *ProjectStore {
 	}
 }
 
-func (p *ProjectStore) Create(project domain.Project) error {
+func (p *ProjectStore) CreatePorject(project domain.Project) error {
 	p.mtx.Lock()
 	defer p.mtx.Unlock()
 
