@@ -1,7 +1,8 @@
-package reprository
+package repository
 
 import (
-	"enginer/Internal/domain"
+	"enginer/internal/domain"
+	"maps"
 	"sync"
 )
 
@@ -10,10 +11,22 @@ type ProjectStore struct {
 	mtx      sync.RWMutex
 }
 
-func Create() *ProjectStore {
+func NewProjectSotre() *ProjectStore {
 	return &ProjectStore{
 		projects: make(map[string]domain.Project),
 	}
+}
+
+func (p *ProjectStore) Create(project domain.Project) error {
+	p.mtx.Lock()
+	defer p.mtx.Unlock()
+
+	if _, ok := p.projects[project.Name]; ok {
+		return domain.ErrProjectAlreadyExist
+	}
+	p.projects[project.Name] = project
+
+	return nil
 }
 
 func (p *ProjectStore) GetByID(id string) (domain.Project, error) {
@@ -34,9 +47,7 @@ func (p *ProjectStore) Lsit() map[string]domain.Project {
 
 	tmp := make(map[string]domain.Project, len(p.projects))
 
-	for k, v := range p.projects {
-		tmp[k] = v
-	}
+	maps.Copy(tmp, p.projects)
 
 	return tmp
 }
