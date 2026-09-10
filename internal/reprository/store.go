@@ -11,7 +11,7 @@ type ProjectStore struct {
 	mtx      sync.RWMutex
 }
 
-func NewProjectSotre() *ProjectStore {
+func NewProjectStore() *ProjectStore {
 	return &ProjectStore{
 		projects: make(map[string]domain.Project),
 	}
@@ -22,7 +22,7 @@ func (p *ProjectStore) Create(project domain.Project) error {
 	defer p.mtx.Unlock()
 
 	if _, ok := p.projects[project.ID]; ok {
-		return domain.ErrProjectAlreadyExist
+		return domain.ErrProjectAlreadyExists
 	}
 	p.projects[project.ID] = project
 
@@ -41,7 +41,7 @@ func (p *ProjectStore) GetByID(id string) (domain.Project, error) {
 	return project, nil
 }
 
-func (p *ProjectStore) Lsit() map[string]domain.Project {
+func (p *ProjectStore) List() map[string]domain.Project {
 	p.mtx.RLock()
 	defer p.mtx.RUnlock()
 
