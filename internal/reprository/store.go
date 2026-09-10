@@ -21,10 +21,10 @@ func (p *ProjectStore) Create(project domain.Project) error {
 	p.mtx.Lock()
 	defer p.mtx.Unlock()
 
-	if _, ok := p.projects[project.Name]; ok {
+	if _, ok := p.projects[project.ID]; ok {
 		return domain.ErrProjectAlreadyExist
 	}
-	p.projects[project.Name] = project
+	p.projects[project.ID] = project
 
 	return nil
 }
