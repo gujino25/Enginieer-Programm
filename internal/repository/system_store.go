@@ -2,6 +2,7 @@ package repository
 
 import (
 	"enginer/internal/domain"
+	"maps"
 	"sync"
 )
 
@@ -28,4 +29,26 @@ func (s *SystemStore) CreateSystemStore(system domain.System) error {
 	s.systems[system.ID] = system
 
 	return nil
+}
+
+func (s *SystemStore) GetById(id string) (domain.System, error) {
+	s.mtx.RLock()
+	defer s.mtx.RUnlock()
+	system, ok := s.systems[id]
+
+	if !ok {
+		return domain.System{}, domain.ErrSystemNotFound
+	}
+
+	return system, nil
+}
+
+func (s *SystemStore) List() map[string]domain.System {
+	s.mtx.RLock()
+	defer s.mtx.RUnlock()
+	tmp := make(map[string]domain.System, len(s.systems))
+
+	maps.Copy(s.systems, tmp)
+
+	return tmp
 }

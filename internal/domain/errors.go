@@ -7,4 +7,5 @@ var (
 	ErrProjectAlreadyExists = errors.New("project already exist")
 	ErrMediumInvailid       = errors.New("medium is invailid")
 	ErrSystemAlreadyExists  = errors.New("system already exist")
+	ErrSystemNotFound       = errors.New("system not found")
 )
