@@ -48,7 +48,7 @@ func (s *SystemStore) List() map[string]domain.System {
 	defer s.mtx.RUnlock()
 	tmp := make(map[string]domain.System, len(s.systems))
 
-	maps.Copy(s.systems, tmp)
+	maps.Copy(tmp, s.systems)
 
 	return tmp
 }
