@@ -10,17 +10,17 @@ type SystemService struct {
 	projectStore *repository.ProjectStore
 }
 
-func (s *SystemService) CreateSystemService(projectID, name string, medium domain.Medium, pupose string) (domain.System, error) {
+func (s *SystemService) CreateSystemService(projectID, name string, medium domain.Medium, purpose string) (domain.System, error) {
 	if _, err := s.projectStore.GetByID(projectID); err != nil {
 		return domain.System{}, err
 	}
 
-	system, err := domain.NewSystem(projectID, name, string(medium), pupose)
+	system, err := domain.NewSystem(projectID, name, string(medium), purpose)
 	if err != nil {
 		return domain.System{}, err
 	}
 
-	if err := s.systemStore.CreateSystemStore(system); err != nil {
+	if err := s.systemStore.Create(system); err != nil {
 		return domain.System{}, err
 	}
 

@@ -22,7 +22,7 @@ type System struct {
 	CreatedAt time.Time
 }
 
-func (m Medium) MediumIsValid() bool {
+func (m Medium) IsValid() bool {
 	switch m {
 	case MediumAir, MediumWater:
 		return true
@@ -30,15 +30,17 @@ func (m Medium) MediumIsValid() bool {
 	return false
 }
 
-func NewSystem(id string, name string, medium string, purpose string) (System, error) {
-	if !MediumAir.MediumIsValid() && !MediumWater.MediumIsValid() {
-		return System{}, ErrMediumInvailid
+func NewSystem(projectid string, name string, medium string, purpose string) (System, error) {
+	m := Medium(medium)
+
+	if !m.IsValid() {
+		return System{}, ErrMediumInvalid
 	}
 	system := System{
 		ID:        uuid.NewString(),
-		ProjectID: id,
+		ProjectID: projectid,
 		Name:      name,
-		Medium:    Medium(medium),
+		Medium:    m,
 		Purpose:   purpose,
 		CreatedAt: time.Now(),
 	}

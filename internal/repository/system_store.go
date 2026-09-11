@@ -19,7 +19,7 @@ func NewSystemStore() *SystemStore {
 
 }
 
-func (s *SystemStore) CreateSystemStore(system domain.System) error {
+func (s *SystemStore) Create(system domain.System) error {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
@@ -31,7 +31,7 @@ func (s *SystemStore) CreateSystemStore(system domain.System) error {
 	return nil
 }
 
-func (s *SystemStore) GetById(id string) (domain.System, error) {
+func (s *SystemStore) GetByID(id string) (domain.System, error) {
 	s.mtx.RLock()
 	defer s.mtx.RUnlock()
 	system, ok := s.systems[id]
