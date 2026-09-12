@@ -29,7 +29,9 @@ func TestSystemStore_CreateAndGetByID(t *testing.T) {
 	if got.Medium != system.Medium {
 		t.Fatalf("Medium = %v, ожидалось %v", got.Medium, system.Medium)
 	}
-
+	if got.Purpose != system.Purpose {
+		t.Fatalf("Purpose = %q, а ожидалось %q", got.Purpose, system.Purpose)
+	}
 }
 
 func TestSystemStore_GetByID_NotFound(t *testing.T) {
