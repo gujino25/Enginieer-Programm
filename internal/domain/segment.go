@@ -10,7 +10,7 @@ type Shape string
 
 const (
 	ShapeRect  = "rect"
-	ShapeRound = "rond"
+	ShapeRound = "round"
 )
 
 type RectGeometry struct {
@@ -41,7 +41,7 @@ func (s Shape) IsValid() bool {
 	return false
 }
 
-func NewSegemnt(systemID string, name string, shape Shape, rect *RectGeometry, round *RoundGeometry, length float64) (Segment, error) {
+func NewSegment(systemID string, name string, shape Shape, rect *RectGeometry, round *RoundGeometry, length float64) (Segment, error) {
 	s := Shape(shape)
 
 	if !s.IsValid() {
@@ -49,23 +49,29 @@ func NewSegemnt(systemID string, name string, shape Shape, rect *RectGeometry, r
 	}
 	switch shape {
 	case ShapeRect:
+		if round != nil {
+			return Segment{}, ErrGeometryInvalid
+		}
 		if rect == nil {
-			return Segment{}, ErrInvalidGeometry
+			return Segment{}, ErrGeometryInvalid
 		}
 		if rect.Height <= 0 || rect.Width <= 0 {
-			return Segment{}, ErrInvalidGeometry
+			return Segment{}, ErrGeometryInvalid
 		}
 	case ShapeRound:
+		if rect != nil {
+			return Segment{}, ErrGeometryInvalid
+		}
 		if round == nil {
-			return Segment{}, ErrInvalidGeometry
+			return Segment{}, ErrGeometryInvalid
 		}
 		if round.Diameter <= 0 {
-			return Segment{}, ErrInvalidGeometry
+			return Segment{}, ErrGeometryInvalid
 		}
 	}
 
 	if length <= 0 {
-		return Segment{}, ErrInvalidLength
+		return Segment{}, ErrLengthInvalid
 	}
 
 	return Segment{
