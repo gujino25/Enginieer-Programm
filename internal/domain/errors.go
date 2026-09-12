@@ -8,4 +8,7 @@ var (
 	ErrMediumInvalid        = errors.New("medium is invailid")
 	ErrSystemAlreadyExists  = errors.New("system already exist")
 	ErrSystemNotFound       = errors.New("system not found")
+	ErrShapeInvalid         = errors.New("shap is invalid")
+	ErrGeometryInvalid      = errors.New("geometry is invalid")
+	ErrLengthInvalid        = errors.New("lenght is invalid")
 )
