@@ -1,0 +1,34 @@
+package service
+
+import (
+	"enginer/internal/domain"
+	"enginer/internal/repository"
+)
+
+type SegmentService struct {
+	segmentStore *repository.SegmentStore
+	systemStore  *repository.SystemStore
+}
+
+func (s *SegmentService) CreateSegment(systemID, name string, shape domain.Shape, rect *domain.RectGeometry, round *domain.RoundGeometry, length float64) (domain.Segment, error) {
+	if _, err := s.systemStore.GetByID(systemID); err != nil {
+		return domain.Segment{}, err
+	}
+	segment, err := domain.NewSegment(systemID, name, shape, rect, round, length)
+	if err != nil {
+		return domain.Segment{}, err
+	}
+
+	if err := s.segmentStore.Create(segment); err != nil {
+		return domain.Segment{}, err
+	}
+
+	return segment, nil
+}
+
+func (s *SegmentService) ListBySystem(systemID string) (map[string]domain.Segment, error) {
+	if _, err := s.systemStore.GetByID(systemID); err != nil {
+		return nil, err
+	}
+	return s.segmentStore.ListBySystem(systemID), nil
+}

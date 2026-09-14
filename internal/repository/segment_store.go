@@ -1,0 +1,63 @@
+package repository
+
+import (
+	"enginer/internal/domain"
+	"maps"
+	"sync"
+)
+
+type SegmentStore struct {
+	segments map[string]domain.Segment
+	mtx      sync.RWMutex
+}
+
+func NewSegmentStore() *SegmentStore {
+
+	return &SegmentStore{
+		segments: make(map[string]domain.Segment),
+	}
+}
+
+func (s *SegmentStore) Create(segment domain.Segment) error {
+	s.mtx.Lock()
+	defer s.mtx.Unlock()
+
+	if _, ok := s.segments[segment.ID]; ok {
+		return domain.ErrSegmentAlreadyExists
+	}
+	s.segments[segment.ID] = segment
+
+	return nil
+}
+
+func (s *SegmentStore) GetByID(id string) (domain.Segment, error) {
+	s.mtx.RLock()
+	defer s.mtx.RUnlock()
+	segments, ok := s.segments[id]
+	if !ok {
+		return domain.Segment{}, domain.ErrSegmentNotFound
+	}
+	return segments, nil
+}
+
+func (s *SegmentStore) ListBySystem(id string) map[string]domain.Segment {
+	s.mtx.RLock()
+	defer s.mtx.RUnlock()
+	tmp := make(map[string]domain.Segment, len(s.segments))
+	for k, v := range s.segments {
+		if v.SystemID == id {
+			tmp[k] = v
+		}
+	}
+
+	return tmp
+}
+
+func (s *SegmentStore) List() map[string]domain.Segment {
+	s.mtx.RLock()
+	defer s.mtx.RUnlock()
+	tmp := make(map[string]domain.Segment, len(s.segments))
+
+	maps.Copy(tmp, s.segments)
+	return tmp
+}
