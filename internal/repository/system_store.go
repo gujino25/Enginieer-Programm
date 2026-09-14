@@ -43,6 +43,20 @@ func (s *SystemStore) GetByID(id string) (domain.System, error) {
 	return system, nil
 }
 
+func (s *SystemStore) ListByProject(id string) map[string]domain.System {
+	s.mtx.RLock()
+	defer s.mtx.RUnlock()
+	tmp := make(map[string]domain.System)
+
+	for k, v := range s.systems {
+		if v.ProjectID == id {
+			tmp[k] = v
+		}
+	}
+
+	return tmp
+}
+
 func (s *SystemStore) List() map[string]domain.System {
 	s.mtx.RLock()
 	defer s.mtx.RUnlock()

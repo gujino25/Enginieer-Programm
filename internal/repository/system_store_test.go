@@ -40,7 +40,7 @@ func TestSystemStore_GetByID_NotFound(t *testing.T) {
 
 	_, err := store.GetByID("asdad")
 	if !errors.Is(err, domain.ErrSystemNotFound) {
-		t.Fatalf("err = %v, жидалась ErrSystemNotFound:", err)
+		t.Fatalf("err = %v, ожидалась ErrSystemNotFound:", err)
 	}
 
 }
@@ -48,7 +48,7 @@ func TestSystemStore_GetByID_NotFound(t *testing.T) {
 func TestSystemStore_List(t *testing.T) {
 	store := NewSystemStore()
 
-	system1, _ := domain.NewSystem("prokect-1", "П1", "air", "Дача приток")
+	system1, _ := domain.NewSystem("project-1", "П1", "air", "Дача приток")
 	system2, _ := domain.NewSystem("project-2", "В1", "air", "Дача вытяжка")
 
 	store.Create(system1)
@@ -66,6 +66,34 @@ func TestSystemStore_List(t *testing.T) {
 
 	if _, ok := got[system2.ID]; !ok {
 		t.Errorf("система %s не найдена в рузльтате List", system2.ID)
+	}
+
+}
+
+func TestSystemStore_ListByProject(t *testing.T) {
+	store := NewSystemStore()
+
+	system1, err := domain.NewSystem("project-1", "П1", "air", "Бизнес приток")
+	if err != nil {
+		t.Fatalf("Не удалось создать систему1 %v", err)
+	}
+	system2, err := domain.NewSystem("project-2", "В1", "air", "Дача вытяжка")
+	if err != nil {
+		t.Fatalf("Не удалось создать систему2 %v", err)
+	}
+	system3, err := domain.NewSystem("project-2", "П1", "air", "Дача приток")
+	if err != nil {
+		t.Fatalf("Не удалось создать систему3 %v", err)
+	}
+
+	store.Create(system1)
+	store.Create(system2)
+	store.Create(system3)
+
+	got := store.ListByProject("project-2")
+
+	if len(got) != 2 {
+		t.Fatalf("len(got) = %d, ожидалось 2", len(got))
 	}
 
 }
