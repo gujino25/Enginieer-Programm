@@ -1,22 +1,18 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
-	"net/http"
+	"enginer/internal/repository"
+	httptransport "enginer/internal/transport/http_transport"
+	"fmt"
 )
 
 func main() {
 
-	mux := http.NewServeMux()
+	projectList := repository.NewProjectStore()
+	httpHandlers := httptransport.NewProjectHandlers(projectList)
+	httpServer := httptransport.NewHTTPServer(httpHandlers)
 
-	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Tupe", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
-	})
-
-	log.Println("Сервер запущен на: 9091")
-	if err := http.ListenAndServe(":9091", mux); err != nil {
-		log.Fatal(err)
+	if err := httpServer.StartServer(); err != nil {
+		fmt.Println("failed to start http server", err)
 	}
 }
