@@ -27,11 +27,11 @@ type ProjectResponse struct {
 	CreatedAt   string `json:"created_at"`
 }
 
-func toProjectResponse(p domain.Project) ProjectResponse {
+func toProjectResponse(d domain.Project) ProjectResponse {
 	return ProjectResponse{
-		ID:          p.ID,
-		Name:        p.Name,
-		Description: p.Description,
-		CreatedAt:   p.CreatedAt.Format("02.01.2006"),
+		ID:          d.ID,
+		Name:        d.Name,
+		Description: d.Description,
+		CreatedAt:   d.CreatedAt.Format("02.01.2006"),
 	}
 }

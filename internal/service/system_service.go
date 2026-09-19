@@ -10,6 +10,13 @@ type SystemService struct {
 	projectStore *repository.ProjectStore
 }
 
+func NewSystemService(systemStore *repository.SystemStore, projectStore *repository.ProjectStore) *SystemService {
+	return &SystemService{
+		systemStore:  systemStore,
+		projectStore: projectStore,
+	}
+}
+
 func (s *SystemService) CreateSystem(projectID, name string, medium domain.Medium, purpose string) (domain.System, error) {
 	if _, err := s.projectStore.GetByID(projectID); err != nil {
 		return domain.System{}, err
