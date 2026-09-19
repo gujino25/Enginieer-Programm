@@ -2,6 +2,7 @@ package main
 
 import (
 	"enginer/internal/repository"
+	"enginer/internal/service"
 	httptransport "enginer/internal/transport/http_transport"
 	"fmt"
 )
@@ -9,8 +10,11 @@ import (
 func main() {
 
 	projectList := repository.NewProjectStore()
-	httpHandlers := httptransport.NewProjectHandlers(projectList)
-	httpServer := httptransport.NewHTTPServer(httpHandlers)
+	systemList := repository.NewSystemStore()
+	systemSvc := service.NewSystemService(systemList, projectList)
+	projectHandlers := httptransport.NewProjectHandlers(projectList)
+	systemHadlers := httptransport.NewSystemHandlers(systemSvc)
+	httpServer := httptransport.NewHTTPServer(projectHandlers, systemHadlers)
 
 	if err := httpServer.StartServer(); err != nil {
 		fmt.Println("failed to start http server", err)
