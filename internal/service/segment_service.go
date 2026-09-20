@@ -10,6 +10,13 @@ type SegmentService struct {
 	systemStore  *repository.SystemStore
 }
 
+func NewSegmentService(segmentStore *repository.SegmentStore, systemStore *repository.SystemStore) *SegmentService {
+	return &SegmentService{
+		segmentStore: segmentStore,
+		systemStore:  systemStore,
+	}
+}
+
 func (s *SegmentService) CreateSegment(systemID, name string, shape domain.Shape, rect *domain.RectGeometry, round *domain.RoundGeometry, length float64) (domain.Segment, error) {
 	if _, err := s.systemStore.GetByID(systemID); err != nil {
 		return domain.Segment{}, err

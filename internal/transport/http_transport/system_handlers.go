@@ -32,7 +32,11 @@ func (s *SystemHandlers) HandleCreateSystem(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	projectID := mux.Vars(r)["project_id"]
-	newSystem, err := s.systemService.CreateSystem(projectID, systemDTO.Name, domain.Medium(systemDTO.Medium), systemDTO.Purpose)
+	newSystem, err := s.systemService.CreateSystem(
+		projectID,
+		systemDTO.Name,
+		domain.Medium(systemDTO.Medium),
+		systemDTO.Purpose)
 	if err != nil {
 		switch {
 		case errors.Is(err, domain.ErrProjectNotFound):
