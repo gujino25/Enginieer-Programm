@@ -5,12 +5,16 @@ import (
 	"enginer/internal/repository"
 )
 
-type SystemService struct {
-	systemStore  *repository.SystemStore
-	projectStore *repository.ProjectStore
+type projectGetter interface {
+	GetByID(id string) (domain.Project, error)
 }
 
-func NewSystemService(systemStore *repository.SystemStore, projectStore *repository.ProjectStore) *SystemService {
+type SystemService struct {
+	systemStore  *repository.SystemStore
+	projectStore projectGetter
+}
+
+func NewSystemService(systemStore *repository.SystemStore, projectStore projectGetter) *SystemService {
 	return &SystemService{
 		systemStore:  systemStore,
 		projectStore: projectStore,

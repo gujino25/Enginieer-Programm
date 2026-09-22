@@ -5,12 +5,16 @@ import (
 	"enginer/internal/repository"
 )
 
-type SegmentService struct {
-	segmentStore *repository.SegmentStore
-	systemStore  *repository.SystemStore
+type systemGetter interface {
+	GetByID(id string) (domain.System, error)
 }
 
-func NewSegmentService(segmentStore *repository.SegmentStore, systemStore *repository.SystemStore) *SegmentService {
+type SegmentService struct {
+	segmentStore *repository.SegmentStore
+	systemStore  systemGetter
+}
+
+func NewSegmentService(segmentStore *repository.SegmentStore, systemStore systemGetter) *SegmentService {
 	return &SegmentService{
 		segmentStore: segmentStore,
 		systemStore:  systemStore,
