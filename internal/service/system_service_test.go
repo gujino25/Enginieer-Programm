@@ -111,13 +111,17 @@ func TestSystemService_ListByProject(t *testing.T) {
 		if len(got) != 2 {
 			t.Fatalf("len(got) = %d, ожидалось 2", len(got))
 		}
-		if _, ok := got[system1.ID]; !ok {
+		check := make(map[string]bool, len(got))
+		for _, p := range got {
+			check[p.ID] = true
+		}
+		if !check[system1.ID] {
 			t.Errorf("система %s не найдена в результате", system1.ID)
 		}
-		if _, ok := got[system2.ID]; !ok {
+		if !check[system2.ID] {
 			t.Errorf("система %s не найдена в результате", system2.ID)
 		}
-		if _, ok := got[otherSystem.ID]; ok {
+		if check[otherSystem.ProjectID] {
 			t.Errorf("система %s из другого проекта не должна быть в результате", otherSystem.ID)
 		}
 	})
