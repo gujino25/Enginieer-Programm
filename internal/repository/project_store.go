@@ -1,8 +1,9 @@
 package repository
 
 import (
+	"cmp"
 	"enginer/internal/domain"
-	"maps"
+	"slices"
 	"sync"
 )
 
@@ -41,13 +42,19 @@ func (p *ProjectStore) GetByID(id string) (domain.Project, error) {
 	return project, nil
 }
 
-func (p *ProjectStore) List() map[string]domain.Project {
+func (p *ProjectStore) List() []domain.Project {
 	p.mtx.RLock()
 	defer p.mtx.RUnlock()
 
-	tmp := make(map[string]domain.Project, len(p.projects))
-
-	maps.Copy(tmp, p.projects)
-
+	tmp := make([]domain.Project, 0, len(p.projects))
+	for _, v := range p.projects {
+		tmp = append(tmp, v)
+	}
+	slices.SortFunc(tmp, func(a, b domain.Project) int {
+		if c := a.CreatedAt.Compare(b.CreatedAt); c != 0 {
+			return c
+		}
+		return cmp.Compare(a.ID, b.ID)
+	})
 	return tmp
 }

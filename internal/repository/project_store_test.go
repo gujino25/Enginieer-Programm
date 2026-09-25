@@ -57,11 +57,16 @@ func TestList(t *testing.T) {
 		t.Fatalf("len(got) = %d, ожидалось 2", len(got))
 	}
 
-	if _, ok := got[project1.ID]; !ok {
+	check := make(map[string]bool, len(got))
+	for _, p := range got {
+		check[p.ID] = true
+	}
+
+	if !check[project1.ID] {
 		t.Errorf("проект %s не найден в рузльтате List", project1.ID)
 	}
 
-	if _, ok := got[project2.ID]; !ok {
+	if !check[project2.ID] {
 		t.Errorf("проект %s не найден в рузльтате List", project2.ID)
 	}
 
